@@ -1,5 +1,5 @@
 ### Main libraries
-import telebot
+import telebot, datetime, sys
 
 ## Debug libraries
 import traceback
@@ -11,7 +11,7 @@ import traceback
 import config
 
 ## Database functions and classes
-import database, classes
+import database, classes, paths
 
 ## Supporting functions
 import utility
@@ -22,6 +22,7 @@ import debug
 
 # Init Bot
 bot = telebot.TeleBot(config.TOKEN)
+db_access : classes.DB_Access
 
 
 @bot.message_handler(commands=['start'])
@@ -29,8 +30,13 @@ def welcome(message) -> None:
     
     accounts = database.get_accounts_data()
 
-    
-    
+    if message.chat.id not in accounts.keys():
+        accounts[message.chat.id] = classes.Account(message.chat.id              ,
+                                                    message.chat.username        ,
+                                                    message.chat.first_name      ,
+                                                    message.chat.last_name       ,
+                                                    str(datetime.datetime.now()) ,
+                                                    8888                         )
     for account in account.keys():
         if account[account].telegram_id == new_account[0]:
             if account[account].language == "Русский":
@@ -87,7 +93,7 @@ def lol(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
-    account = database.get_accounts_data()
+    accounts = database.get_accounts_data()
     try:
         if call.data in variables.call_data_dict.keys():
             if variables.call_data_dict[call.data][0] == 'set_lang':
@@ -103,13 +109,11 @@ def callback_inline(call):
             
 
 
-    except Exception as error:
-        debug.saveLogs(f"Error in the 'call' part!\n\n[\n{traceback.format_exc()}\n]", path.log_file)
-        for id in variables.label_change_ids_arr:
-            bot.send_message(int(id), f"Error in the 'call' part!\n\n{traceback.format_exc()}")
+    except:
+        debug.saveLogs(f'Error in [call]!\n\n{traceback.format_exc()}', paths.LOG_FILE)
 
 if __name__ == '__main__':
     try: 
+        db_access = classes.DB_Access(*sys.argv[1:])
         bot.polling(none_stop=True)
-    except Exception as _:
-        debug.saveLogs(f"Program error!\n\n{traceback.format_exc()}", path.log_file)
+    except : debug.saveLogs (f'Program error!\n\n{traceback.format_exc()}', paths.LOG_FILE)

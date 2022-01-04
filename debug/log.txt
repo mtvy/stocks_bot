@@ -1,0 +1,27 @@
+
+Date: 2022-01-04 05:53:29.383708
+
+ERROR! WRONG database DATA TAKING!
+
+Traceback (most recent call last):
+  File "database.py", line 55, in get_accounts_data
+    print(accounts['8888'])
+TypeError: list indices must be integers or slices, not str
+
+Date: 2022-01-04 05:53:43.664128
+
+ERROR! WRONG database DATA TAKING!
+
+Traceback (most recent call last):
+  File "database.py", line 55, in get_accounts_data
+    print(accounts[8888])
+IndexError: list index out of range
+
+Date: 2022-01-04 05:56:57.678139
+
+ERROR! WRONG database DATA TAKING!
+
+Traceback (most recent call last):
+  File "database.py", line 57, in get_accounts_data
+    print(accounts['8888'])
+KeyError: '8888'

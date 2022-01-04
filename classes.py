@@ -1,40 +1,47 @@
-import database
+# 
+# Bot's clasess
+#
+
+from re import S
+
 
 class Account:
     """
     This class creates accounts with all user data.
     Need array acc that includes twelve params.
     """
-    def __init__(self, acc):
-        self.telegram_id = acc[0]
-        self.login = acc[1]
-        self.name = acc[2]
-        self.oper_ids = acc[3]
-        self.conversation = acc[4]
-        self.discount = acc[5]
-        self.tags = acc[6]
-        self.ref = acc[7]
-        self.personal_data = acc[8]
-        self.language = acc[9]
-        self.feedback_st = acc[10]
-        self.timer_conv = acc[11]
+    def __init__(self, *args) -> None:
+        
+        (self.id         ,
+         self.username   ,
+         self.first_name ,
+         self.last_name  ,
+         self.reg_date   ,
+         self.wallet     ) = args
     
-    def __str__(self):
-        return str({
-            'telegram_id': self.telegram_id,
-            'login': self.login,
-            'name':  self.name,
-            'oper_ids':  self.oper_ids,
-            'conversation': self.conversation,
-            'discount':  self.discount,
-            'tags': self.tags,
-            'ref':  self.ref,
-            'personal_data': self.personal_data,
-            'language': self.language,
-            'feedback_st': self.feedback_st,
-            'timer_conv': self.timer_conv,
-        })
+    def __str__(self) -> str:
+        return (f'Account data ->                    \n\
+                      id         : {self.id}         \n\
+                      username   : {self.username}   \n\
+                      first_name : {self.first_name} \n\
+                      last_name  : {self.last_name}  \n\
+                      reg_date   : {self.reg_date}   \n\
+                      wallet     : {self.wallet}     \n'
+                )
 
-if __name__ == "__main__":
-    acc = database.get_accounts_data()
-    for i in acc.keys(): print(acc[i], '\n')
+class DB_Access:
+    def __init__(self, *args) -> None:
+        self.database, self.user, self.password, self.host, self.port = args
+
+
+if __name__ == '__main__':
+    
+    account = Account(
+                      '8888' ,
+                      'mtvy' ,
+                      'None' ,
+                      'None' ,
+                      '04.01.22 02:20:22' ,
+                      'C0DE000000000000'  ,
+                     )
+    print(account)

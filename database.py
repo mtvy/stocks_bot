@@ -10,43 +10,55 @@ import traceback, sys
 import debug
 
 ## Different structures
-import classes, paths
+import classes, paths, variables
+from typing import Any, Dict, Tuple, Literal
 
-#===============================================+
-# database = 'postgres' , password = 'postgres' |
-# user     = 'postgres' , host     = '127.0.0.1'|
-# port     = '5432'                             |
-#===============================================+
-def connect(db, pswrd, usr, hst, prt):
-    try:
-        connection = psycopg2.connect(database = db, password = pswrd, user = usr, host = hst, port = prt)        
-        return connection, connection.cursor()
-    except:
-        debug.saveLogs(f'ERROR! WRONG CONNECTION TO THE DATABASE\n\n{traceback.format_exc()}', paths.LOG_FILE)
+ARGS_COUNT = 5
 
+#===========================================================+
+# database = 'postgres' , password = 'postgres'             |
+# user     = 'postgres' , host     = '127.0.0.1'            |
+# port     = '5432'                                         |
+#===========================================================+
+def connect(*args) -> (Tuple[Any, Any] or Tuple[Literal[False], Literal[False]]):
+    if len(args) == ARGS_COUNT:
+        db, pswrd, usr, hst, prt = args
+        try:
+            connection = psycopg2.connect(database = db, password = pswrd, user = usr, host = hst, port = prt)        
+            return connection, connection.cursor()
+        except:
+            debug.saveLogs(f'ERROR! WRONG CONNECTION TO THE DATABASE\n\n{traceback.format_exc()}', paths.LOG_FILE)
     return False, False
 
-
-def get_accounts_data():
-    connection, cursor = connect()
-    if connection == 0 and cursor == 0:
-        return {}
-    else:
+#===========================================================+
+#CREATE TABLE accounts_tb (                                 |
+#                          Id         SERIAL PRIMARY KEY ,  |                 
+#                          user_id    INTEGER            ,  |
+#                          username   VARCHAR(255)       ,  |                           
+#                          first_name VARCHAR(255)       ,  |                                                     
+#                          last_name  VARCHAR(255)       ,  |                                                         
+#                          reg_date   VARCHAR(255)       ,  |                                                          
+#                          wallet     BIGINT                |
+#                         );                                |
+#===========================================================+
+def get_accounts_data(*args, accounts : dict = {}) -> Dict[int, classes.Account]:
+    connection, cursor = args
+    if connection and cursor:
         try:
-            account_settings = {}
-            cursor.execute("SELECT telegram_id, login, name, oper_ids, conversation, discount, tags, ref, personal_data, language, feedback_st, timer_conv FROM account_tb")
-            accounts = cursor.fetchall()
-            for acc in accounts:
-                account = classes.Account(acc = acc)
-                account_settings[account.telegram_id] = account
+            cursor.execute("SELECT user_id, username, first_name, last_name, reg_date, wallet FROM accounts_tb")
+            db_accounts = cursor.fetchall()
+            for acc in db_accounts: accounts[acc[0]] = classes.Account(*acc)
             connection.commit()
-            #print('Successful account_tb data taken!')
-            return account_settings
-        except Exception as e:
-            print('Error taking data from account_tb!', e)
-            return {}
+        except:
+            debug.saveLogs(f'ERROR! WRONG database DATA TAKING!\n\n{traceback.format_exc()}', paths.LOG_FILE)
+    return accounts
 
 
 if __name__ == '__main__':
-    print(sys.argv)
-    #connect()
+
+    print('You need to enter more args to connect to database!\n'
+           if connect(*sys.argv[1:]) == False else 'CONNECTED!\n')
+
+    accounts = get_accounts_data(*connect(*sys.argv[1:]))
+
+    print(*accounts.values())
