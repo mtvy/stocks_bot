@@ -66,8 +66,9 @@ def get_accounts_data(*args, accounts : dict = {}) -> Dict[int, classes.Account]
         |                           language   VARCHAR(255)       ,  |
         |                           first_name VARCHAR(255)       ,  |                                                     
         |                           last_name  VARCHAR(255)       ,  |                                                         
-        |                           reg_date   VARCHAR(255)       ,  |                                                          
-        |                           wallet     BIGINT                |
+        |                           reg_date   VARCHAR(255)       ,  |
+        |                           status     VARCHAR(255)       ,  |                  
+        |                           wallet_id  BIGINT                |
         |                          );                                |
         +------------------------------------------------------------+
     """

@@ -44,8 +44,8 @@ def welcome(message) -> None:
 
 
 
-@bot.message_handler(content_types=['text', 'photo'])
-def lol(message):
+@bot.message_handler(content_types=['text'])
+def basic_handling(message) -> None:
     
     account = database.get_accounts_data()
     
@@ -57,7 +57,7 @@ def lol(message):
 
 
 @bot.callback_query_handler(func=lambda call: True)
-def callback_inline(call):
+def callback_inline(call) -> None:
     accounts = database.get_accounts_data()
     try:
         pass
