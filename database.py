@@ -14,13 +14,19 @@ import classes, paths, variables
 from typing import Any, Dict, Tuple, Literal
 
 ARGS_COUNT = 5
+ID_ITEM    = 0
 
-#===========================================================+
-# database = 'postgres' , password = 'postgres'             |
-# user     = 'postgres' , host     = '127.0.0.1'            |
-# port     = '5432'                                         |
-#===========================================================+
+
 def connect(*args) -> (Tuple[Any, Any] or Tuple[Literal[False], Literal[False]]):
+    """
+    This function allows the bot to connect to the database.
+    You can find some basic params below ->
+    +------------------------------------------------+
+    | database = 'postgres' , password = 'postgres'  |      
+    | user     = 'postgres' , host     = '127.0.0.1' |
+    | port     = '5432'                              |
+    +------------------------------------------------+
+    """ 
     if len(args) == ARGS_COUNT:
         db, pswrd, usr, hst, prt = args
         try:
@@ -30,24 +36,34 @@ def connect(*args) -> (Tuple[Any, Any] or Tuple[Literal[False], Literal[False]])
             debug.saveLogs(f'ERROR! WRONG CONNECTION TO THE DATABASE\n\n{traceback.format_exc()}', paths.LOG_FILE)
     return False, False
 
-#===========================================================+
-#CREATE TABLE accounts_tb (                                 |
-#                          Id         SERIAL PRIMARY KEY ,  |                 
-#                          user_id    INTEGER            ,  |
-#                          username   VARCHAR(255)       ,  |                           
-#                          first_name VARCHAR(255)       ,  |                                                     
-#                          last_name  VARCHAR(255)       ,  |                                                         
-#                          reg_date   VARCHAR(255)       ,  |                                                          
-#                          wallet     BIGINT                |
-#                         );                                |
-#===========================================================+
+
 def get_accounts_data(*args, accounts : dict = {}) -> Dict[int, classes.Account]:
+    """
+    This function get accounts data from database table 'accounts_tb'
+    
+    return: 
+        dict with id as a key and Account as value
+    
+    create:
+        +------------------------------------------------------------+
+        | CREATE TABLE accounts_tb (                                 |
+        |                           Id         SERIAL PRIMARY KEY ,  |                 
+        |                           user_id    INTEGER            ,  |
+        |                           username   VARCHAR(255)       ,  |
+        |                           language   VARCHAR(255)       ,  |
+        |                           first_name VARCHAR(255)       ,  |                                                     
+        |                           last_name  VARCHAR(255)       ,  |                                                         
+        |                           reg_date   VARCHAR(255)       ,  |                                                          
+        |                           wallet     BIGINT                |
+        |                          );                                |
+        +------------------------------------------------------------+
+    """
     connection, cursor = args
     if connection and cursor:
         try:
-            cursor.execute("SELECT user_id, username, first_name, last_name, reg_date, wallet FROM accounts_tb")
+            cursor.execute("SELECT user_id, username, language, first_name, last_name, reg_date, wallet FROM accounts_tb")
             db_accounts = cursor.fetchall()
-            for acc in db_accounts: accounts[acc[0]] = classes.Account(*acc)
+            for acc in db_accounts: accounts[acc[ID_ITEM]] = classes.Account(*acc)
             connection.commit()
         except:
             debug.saveLogs(f'ERROR! WRONG database DATA TAKING!\n\n{traceback.format_exc()}', paths.LOG_FILE)

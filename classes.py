@@ -12,6 +12,7 @@ class Account:
         
         (self.id         ,
          self.username   ,
+         self.language   ,
          self.first_name ,
          self.last_name  ,
          self.reg_date   ,
@@ -21,6 +22,7 @@ class Account:
         return f'Account data ->                    \n\
                      id         : {self.id}         \n\
                      username   : {self.username}   \n\
+                     language   : {self.language}   \n\
                      first_name : {self.first_name} \n\
                      last_name  : {self.last_name}  \n\
                      reg_date   : {self.reg_date}   \n\
@@ -44,7 +46,7 @@ class DB_Access:
 
 if __name__ == '__main__':
 	
-    account   = Account('8888', 'mtvy', 'None', 'None', '04.01.22 02:20:22', 'C0DE000000000000')
+    account   = Account('8888', 'mtvy', 'None', 'None', 'None', '04.01.22 02:20:22', 'C0DE000000000000')
     
     print(account)
     
