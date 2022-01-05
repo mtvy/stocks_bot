@@ -20,12 +20,13 @@ ID_ITEM    = 0
 def connect(*args) -> (Tuple[Any, Any] or Tuple[Literal[False], Literal[False]]):
     """
     This function allows the bot to connect to the database.
-    You can find some basic params below ->
-    +------------------------------------------------+
-    | database = 'postgres' , password = 'postgres'  |      
-    | user     = 'postgres' , host     = '127.0.0.1' |
-    | port     = '5432'                              |
-    +------------------------------------------------+
+    
+    param:
+        +------------------------------------------------+
+        | database = 'postgres' , password = 'postgres'  |      
+        | user     = 'postgres' , host     = '127.0.0.1' |
+        | port     = '5432'                              |
+        +------------------------------------------------+
     """ 
     if len(args) == ARGS_COUNT:
         db, pswrd, usr, hst, prt = args
@@ -36,6 +37,18 @@ def connect(*args) -> (Tuple[Any, Any] or Tuple[Literal[False], Literal[False]])
             debug.saveLogs(f'ERROR! WRONG CONNECTION TO THE DATABASE\n\n{traceback.format_exc()}', paths.LOG_FILE)
     return False, False
 
+def get_message(text, connection, cursor) -> (Tuple[Any] or Literal[False]):
+    """
+    This function send text to database and returns answer.
+    """
+    try:
+        cursor.execute(text)
+        data = cursor.fetchall()
+        connection.commit()
+        return data
+    except:
+        debug.saveLogs(f'ERROR! WRONG database DATA TAKING!\n\n{traceback.format_exc()}', paths.LOG_FILE)
+    return False
 
 def get_accounts_data(*args, accounts : dict = {}) -> Dict[int, classes.Account]:
     """
@@ -61,20 +74,21 @@ def get_accounts_data(*args, accounts : dict = {}) -> Dict[int, classes.Account]
     connection, cursor = args
     if connection and cursor:
         try:
-            cursor.execute("SELECT user_id, username, language, first_name, last_name, reg_date, wallet FROM accounts_tb")
-            db_accounts = cursor.fetchall()
+            db_accounts = get_message(variables.db_accounts_get, connection, cursor)
+            
             for acc in db_accounts: accounts[acc[ID_ITEM]] = classes.Account(*acc)
-            connection.commit()
         except:
             debug.saveLogs(f'ERROR! WRONG database DATA TAKING!\n\n{traceback.format_exc()}', paths.LOG_FILE)
     return accounts
 
 
 if __name__ == '__main__':
-
+	
+    args = sys.argv[1:]
+    
     print('You need to enter more args to connect to database!\n'
-           if connect(*sys.argv[1:]) == False else 'CONNECTED!\n')
+                   if connect(*args) == False else 'CONNECTED!\n')
 
-    accounts = get_accounts_data(*connect(*sys.argv[1:]))
+    accounts = get_accounts_data(*connect(*args))
 
     print(*accounts.values())
