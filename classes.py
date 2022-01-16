@@ -3,6 +3,9 @@
 #
 
 
+from typing import Tuple
+
+
 class Account:
     """
     This class creates accounts with all user data.
@@ -31,7 +34,7 @@ class Account:
                      status     : { self.status     } \n\
                      wallet_id  : { self.wallet_id  } \n'
 
-
+ 
 class DB_Access:
     """
     This class collect data for database connection.
@@ -42,11 +45,11 @@ class DB_Access:
     
     def __str__(self):
         return f'Data for database connection ->   \n\
-                     database  : {self.database}   \n\
-                     user      : {self.user}       \n\
-                     password  : {self.password}   \n\
-                     host      : {self.host}       \n\
-                     port      : {self.port}       \n'
+                     database   : {self.database}  \n\
+                     user       : {self.user}      \n\
+                     password   : {self.password}  \n\
+                     host       : {self.host}      \n\
+                     port       : {self.port}      \n'
                      
 
 
@@ -61,7 +64,7 @@ class Balance:
          self.sol                       ) = args
          
         self.balance_id   = self.generate_balance_id()
-        self.balance_hash = None # generate_hash()
+        self.balance_hash = None                        # generate_hash()
         
     
     def generate_balance_id(self) -> int:
@@ -75,13 +78,13 @@ class Wallet(Balance):
     """
     This object include info about wallet and balance.
     """
-    def __init__(self, user_info : (int, str), *args):
+    def __init__(self, user_info : Tuple[int, str], *args):
         
         super().__init__(*args)
         self.user_id, self.status = user_info
         
         self.wallet_id   = self.generate_wallet_id()
-        self.wallet_hash = None # generate_hash()
+        self.wallet_hash = None                         # generate_hash()
         
     
     def generate_wallet_id(self) -> int:
@@ -92,22 +95,23 @@ class Wallet(Balance):
     
     def __str__(self) -> str:
         
-        return f'Wallet info ->                           \n\
-                 user_id    : { self.user_id    }         \n\
-                 status     : { self.status     }         \n\
-                 wallet_id  : { self.wallet_id  }         \n\
-                 balance_id : { self.balance_id }         \n\
-                                                          \n\
-                 Balance info ->                          \n\
-                                   usd  : { self.usd  }   \n\
-                                   rub  : { self.rub  }   \n\
-                                   euro : { self.euro }   \n\
-                                   usdt : { self.usdt }   \n\
-                                   btc  : { self.btc  }   \n\
-                                   eth  : { self.eth  }   \n\
-                                   sol  : { self.sol  } \n\n\
-                 wallet_hash  = { self.wallet_hash  }     \n\
-                 balance_hash = { self.balance_hash }     \n'
+        return f'Wallet info ->                              \n\
+                     user_id    : { self.user_id    }        \n\
+                     status     : { self.status     }        \n\
+                     wallet_id  : { self.wallet_id  }        \n\
+                     balance_id : { self.balance_id }        \n\
+                                                             \n\
+                     Balance info ->                         \n\
+                                       usd  : { self.usd  }  \n\
+                                       rub  : { self.rub  }  \n\
+                                       euro : { self.euro }  \n\
+                                       usdt : { self.usdt }  \n\
+                                       btc  : { self.btc  }  \n\
+                                       eth  : { self.eth  }  \n\
+                                       sol  : { self.sol  }  \n\
+                                                             \n\
+                     wallet_hash  = { self.wallet_hash  }    \n\
+                     balance_hash = { self.balance_hash }    \n'
 
 
 
@@ -115,7 +119,12 @@ class Wallet(Balance):
 
 if __name__ == '__main__':
 	
-    account = Account('8888', 'mtvy', 'None', 'None', 'None', '04.01.22 02:20:22', 'None', 'C0DE000000000000')
+    account = Account(
+                       8888 , 'mtvy'             , 
+                      'None', 'None'             , 
+                      'None', '04.01.22 02:20:22', 
+                      'None',  88888888888
+                     )
     
     print(account)
     

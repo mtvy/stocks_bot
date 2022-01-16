@@ -1,7 +1,10 @@
 CC=python3
 
-debug_db:
+debug_db_mac:
 	$(CC) database.py postgres 111 postgres 127.0.0.1 5432
+
+debug_db_win:
+	$(CC) database.py postgres postgres postgres 127.0.0.1 5432
 
 configs:
 	sudo apt-get update
